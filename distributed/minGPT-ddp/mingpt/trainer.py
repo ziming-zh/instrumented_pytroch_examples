@@ -17,7 +17,7 @@ import boto3
 from urllib.parse import urlparse
 import fsspec
 import io
-
+import mldaikon.proxy_wrapper.proxy as proxy_wrapper
 @dataclass
 class TrainerConfig:
     max_epochs: int = None
@@ -54,7 +54,7 @@ class Trainer:
         self.test_loader = self._prepare_dataloader(test_dataset) if test_dataset else None
         # initialize train states
         self.epochs_run = 0
-        self.model = model.to(self.local_rank)
+        self.model = proxy_wrapper.Proxy(model.to(self.local_rank))
         self.optimizer = optimizer        
         self.save_every = self.config.save_every
         if self.config.use_amp:

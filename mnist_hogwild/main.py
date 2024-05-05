@@ -6,7 +6,7 @@ import torch.nn.functional as F
 import torch.multiprocessing as mp
 from torch.utils.data.sampler import Sampler
 from torchvision import datasets, transforms
-
+import mldaikon.proxy_wrapper.proxy as proxy_wrapper
 from train import train, test
 
 # Training settings
@@ -86,6 +86,7 @@ if __name__ == '__main__':
     mp.set_start_method('spawn', force=True)
 
     model = Net().to(device)
+    model = proxy_wrapper.Proxy(model)
     model.share_memory() # gradients are allocated lazily, so they are not shared here
 
     processes = []

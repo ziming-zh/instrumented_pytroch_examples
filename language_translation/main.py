@@ -9,6 +9,7 @@ from tqdm import tqdm # For fancy progress bars
 from src.model import Translator # Our model
 from src.data import get_data, create_mask, generate_square_subsequent_mask # Loading data and data preprocessing
 from argparse import ArgumentParser # For args
+import mldaikon.proxy_wrapper.proxy as proxy_wrapper
 
 # Train on the GPU if possible
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -70,6 +71,8 @@ def inference(opts):
         dim_feedforward=opts.dim_feedforward,
         dropout=opts.dropout
     ).to(DEVICE)
+    
+    model = proxy_wrapper.Proxy(model)
 
     # Load in weights
     model.load_state_dict(torch.load(opts.model_path))

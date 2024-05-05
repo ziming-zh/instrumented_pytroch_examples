@@ -9,6 +9,7 @@ from torchvision.datasets import MNIST
 from torchvision.transforms import Compose, ToTensor, Normalize, Lambda
 from torch.utils.data import DataLoader
 from torch.optim import Adam
+import mldaikon.proxy_wrapper.proxy as proxy_wrapper
 
 
 def get_y_neg(y):
@@ -169,6 +170,7 @@ if __name__ == "__main__":
         MNIST("./data/", train=False, download=True, transform=transform), **test_kwargs
     )
     net = Net([784, 500, 500])
+    net = proxy_wrapper.Proxy(net)
     x, y = next(iter(train_loader))
     x, y = x.to(device), y.to(device)
     x_pos = overlay_y_on_x(x, y)

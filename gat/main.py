@@ -9,7 +9,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 from torch.optim import Adam
-
+import mldaikon.proxy_wrapper.proxy as proxy_wrapper
 
 ################################
 ###  GAT LAYER DEFINITION    ###
@@ -361,6 +361,8 @@ if __name__ == '__main__':
         dropout=args.dropout_p,                 # Dropout rate
         leaky_relu_slope=0.2                    # Alpha (slope) of the leaky relu activation
     ).to(device)
+    
+    gat_net = proxy_wrapper.Proxy(gat_net)
 
     # configure the optimizer and loss function
     optimizer = Adam(gat_net.parameters(), lr=args.lr, weight_decay=args.l2)
